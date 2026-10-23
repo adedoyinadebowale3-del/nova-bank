@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Dashboard | NOVA BANK DEMO</title><link rel="stylesheet" href="../style.css"></head>
+<body>
+<div class="demo-banner">DEMO DASHBOARD · All balances and transactions are fictional</div>
+<div class="dashboard-layout">
+  <aside class="sidebar"><a href="../index.html" class="logo"><span>✦</span> NOVA BANK</a><nav aria-label="Dashboard navigation">
+    <a class="active" href="dashboard.html">▦ &nbsp; Overview</a><a href="transfers.html">↗ &nbsp; Transfers</a><a href="transactions.html">◷ &nbsp; Transactions</a><a href="cards.html">▣ &nbsp; My Cards</a><a href="payments.html">▤ &nbsp; Payments</a><a href="profile.html">◉ &nbsp; My Profile</a><button type="button" id="logoutButton">↩ &nbsp; Exit Demo</button>
+  </nav></aside>
+  <main class="dash-main">
+    <div class="dash-top"><div><p id="todayLabel">YOUR NOVA SPACE</p><h1 id="welcomeTitle">Welcome back!</h1><p>Here's your fictional demo account at a glance.</p></div><div class="avatar" id="avatar">N</div></div>
+    <section class="balance-card"><span class="eyebrow">DEMO AVAILABLE BALANCE</span><div class="balance-row"><strong id="balanceValue">₦245,680.50</strong><button class="ghost-button" type="button" id="toggleBalance" aria-pressed="false">Hide balance</button></div><div class="account-meta"><div>DEMO ACCOUNT NUMBER<strong id="accountNumber">NOV20481234</strong></div><div>ACCOUNT TYPE<strong>Nova Everyday (Demo)</strong></div></div></section>
+    <div class="quick-actions"><button class="quick-action" data-demo-alert="Demo transfer only. No money was sent."><span>↗</span>Transfer</button><button class="quick-action" data-demo-alert="Demo bill payment only. No bill was paid."><span>▤</span>Pay Bills</button><a class="quick-action" href="cards.html"><span>▣</span>My Cards</a><a class="quick-action" href="transactions.html"><span>◷</span>History</a></div>
+    <div class="dash-grid"><section class="panel"><div class="panel-heading"><h2>Recent activity</h2><a href="transactions.html">View all</a></div><div class="transaction-list" id="recentTransactions"></div></section><section class="panel"><div class="panel-heading"><h2>Your Nova card</h2><a href="cards.html">View card</a></div><div class="virtual-card"><div class="card-top"><span class="card-brand">✦ NOVA</span><span>▦</span></div><div class="card-number">•••• &nbsp; •••• &nbsp; •••• &nbsp; 2048</div><div class="card-bottom"><div><small>DEMO CARDHOLDER</small><p id="cardHolder">NOVA CUSTOMER</p></div><span class="card-mark">✦</span></div></div><p class="fine-print">Fictional card artwork. Not a payment card.</p></section></div>
+  </main>
+</div>
+<script>
+const profile = JSON.parse(sessionStorage.getItem("novaDemoProfile") || "null");
+if (!profile) window.location.replace("register.html");
+else {
+  const first = profile.firstName || "Nova";
+  document.getElementById("welcomeTitle").textContent = "Welcome, " + first + "!";
+  document.getElementById("avatar").textContent = first.charAt(0).toUpperCase();
+  document.getElementById("accountNumber").textContent = profile.accountNumber || "NOV20481234";
+  document.getElementById("cardHolder").textContent = (first + " " + (profile.lastName || "")).trim().toUpperCase();
+}
+const balance = sessionStorage.getItem("novaDemoBalance") || "245680.50";
+let visible = true;
+document.getElementById("toggleBalance").addEventListener("click", function() {
+  visible = !visible;
+  document.getElementById("balanceValue").textContent = visible ? "₦" + Number(balance).toLocaleString("en-NG",{minimumFractionDigits:2,maximumFractionDigits:2}) : "₦ ••••••";
+  this.textContent = visible ? "Hide balance" : "Show balance";
+  this.setAttribute("aria-pressed", String(!visible));
+});
+const transactions = [
+ {icon:"↙",name:"Demo salary credit",date:"Today · Sample",amount:"+₦180,000.00",type:"positive"},
+ {icon:"↗",name:"Online shopping (demo)",date:"Yesterday · Sample",amount:"−₦24,500.00",type:"negative"},
+ {icon:"▤",name:"Utility bill (demo)",date:"10 Oct · Sample",amount:"−₦12,800.00",type:"negative"},
+ {icon:"↙",name:"Demo transfer received",date:"8 Oct · Sample",amount:"+₦50,000.00",type:"positive"}
+];
+document.getElementById("recentTransactions").innerHTML = transactions.slice(0,3).map(t=>`<div class="transaction"><span class="tx-icon">${t.icon}</span><div class="tx-info"><strong>${t.name}</strong><small>${t.date}</small></div><span class="tx-amount ${t.type}">${t.amount}</span></div>`).join("");
+document.querySelectorAll("[data-demo-alert]").forEach(b=>b.addEventListener("click",()=>alert(b.dataset.demoAlert)));
+document.getElementById("logoutButton").addEventListener("click",()=>{sessionStorage.removeItem("novaDemoProfile");sessionStorage.removeItem("novaDemoBalance");window.location.href="../index.html";});
+</script>
+</body></html>

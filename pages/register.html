@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Create Demo Account | NOVA BANK</title><link rel="stylesheet" href="../style.css"></head>
+<body>
+<div class="demo-banner">PRESENTATION DEMO · Use fictional details only</div>
+<header class="navbar"><a href="../index.html" class="logo"><span>✦</span> NOVA BANK</a><a class="nav-button" href="../index.html">Back to Home</a></header>
+<main class="auth-shell">
+  <aside class="auth-aside"><span class="badge">✦ YOUR NEXT CHAPTER</span><h1>Welcome to a brighter way to bank.</h1><p>Create a fictional demo profile to explore the NOVA BANK dashboard. This prototype does not open a real bank account.</p></aside>
+  <section class="auth-main"><form class="form-card" id="registerForm">
+    <h2>Create your account</h2><p class="form-intro">It takes just a moment to set up your demo.</p>
+    <div class="demo-note">Demo only: don't enter real passwords, banking details, or sensitive personal information.</div>
+    <div class="form-grid">
+      <div class="field"><label for="firstName">First name</label><input id="firstName" name="firstName" required maxlength="40" autocomplete="off" placeholder="Alex"></div>
+      <div class="field"><label for="lastName">Last name</label><input id="lastName" name="lastName" required maxlength="40" autocomplete="off" placeholder="Morgan"></div>
+      <div class="field full"><label for="email">Demo email</label><input id="email" name="email" type="email" required maxlength="100" autocomplete="off" placeholder="alex@example.test"></div>
+      <div class="field full"><label for="demoPin">Demo passphrase (not a real password)</label><input id="demoPin" name="demoPin" type="password" minlength="4" maxlength="40" required autocomplete="new-password" placeholder="Create a demo-only passphrase"></div>
+    </div>
+    <p class="form-message" id="formMessage" aria-live="polite"></p>
+    <button class="button-primary" type="submit">Create Demo Account →</button>
+    <p class="fine-print">This prototype stores no profile or password after you leave the page. It uses sample data in this browser session only.</p>
+  </form></section>
+</main>
+<script>
+document.getElementById("registerForm").addEventListener("submit", function(event) {
+  event.preventDefault();
+  const first = document.getElementById("firstName").value.trim();
+  const last = document.getElementById("lastName").value.trim();
+  const email = document.getElementById("email").value.trim();
+  const passphrase = document.getElementById("demoPin").value;
+  const message = document.getElementById("formMessage");
+  if (!first || !last || !email || passphrase.length < 4) {
+    message.textContent = "Please complete every field. The demo passphrase must be at least 4 characters.";
+    return;
+  }
+  // Intentionally use sessionStorage only for this fictional presentation profile.
+  // Never use this pattern for real authentication or banking credentials.
+  const account = {
+    firstName: first,
+    lastName: last,
+    email: email,
+    accountNumber: "NOV" + Math.floor(10000000 + Math.random() * 90000000),
+    createdAt: new Date().toISOString()
+  };
+  sessionStorage.setItem("novaDemoProfile", JSON.stringify(account));
+  sessionStorage.setItem("novaDemoBalance", "245680.50");
+  window.location.href = "dashboard.html";
+});
+</script>
+</body></html>
